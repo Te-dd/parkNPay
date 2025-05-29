@@ -1,0 +1,42 @@
+{% extends 'parking/base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <h1 class="text-3xl font-bold mb-8 text-dark-puce text-center">Welcome to ParkNPay</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-semibold mb-6 text-dark-puce">Login</h2>
+        
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label class="block text-spanish-gray mb-2">{{ field.label }}</label>
+                    {{ field.errors }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="w-full bg-dark-puce text-white py-2 px-4 rounded hover:bg-opacity-80 transition duration-200">
+                Login
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <p class="text-spanish-gray">Don't have an account? 
+                <a href="{% url 'signup' %}" class="text-dark-puce hover:text-sea transition duration-200">Sign Up</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    input {
+        @apply w-full border border-spanish-gray/20 rounded px-3 py-2 focus:outline-none focus:border-sea;
+    }
+    .errorlist {
+        @apply text-coral text-sm mt-1;
+    }
+</style>
+{% endblock %} 

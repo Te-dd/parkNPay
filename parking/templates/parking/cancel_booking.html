@@ -1,0 +1,48 @@
+{% extends 'parking/base.html' %}
+
+{% block content %}
+<div class="max-w-lg mx-auto mt-8">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-6">Cancel Booking</h2>
+        
+        <div class="mb-6">
+            <h3 class="font-semibold mb-2">Booking Details:</h3>
+            <p class="text-gray-600">Location: {{ booking.parking_space.location.name }}</p>
+            <p class="text-gray-600">Space: Side {{ booking.parking_space.side }} - Space {{ booking.parking_space.space_number }}</p>
+            <p class="text-gray-600">Start Time: {{ booking.start_time|date:"F j, Y, g:i a" }}</p>
+            <p class="text-gray-600">End Time: {{ booking.end_time|date:"F j, Y, g:i a" }}</p>
+            <p class="text-gray-600">Payment Status: {{ booking.get_payment_status_display }}</p>
+            {% if booking.payment_method %}
+                <p class="text-gray-600">Payment Method: {{ booking.get_payment_method_display }}</p>
+            {% endif %}
+        </div>
+
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                        Are you sure you want to cancel this booking? This action cannot be undone.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex space-x-4">
+            <form method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition duration-200">
+                    Confirm Cancellation
+                </button>
+            </form>
+            <a href="{% url 'dashboard' %}" class="inline-block bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition duration-200">
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

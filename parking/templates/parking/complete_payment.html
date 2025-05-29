@@ -1,0 +1,52 @@
+{% extends 'parking/base.html' %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h1 class="text-3xl font-bold mb-6 text-dark-puce">Complete Payment</h1>
+        
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-spanish-gray">Booking Details</h2>
+            <div class="space-y-2">
+                <p class="text-spanish-gray">Location: {{ booking.parking_space.location.name }}</p>
+                <p class="text-spanish-gray">Space: Side {{ booking.parking_space.side }} - {{ booking.parking_space.space_number }}</p>
+                <p class="text-spanish-gray">Start Time: {{ booking.start_time|date:"F j, Y, g:i a" }}</p>
+                <p class="text-spanish-gray">End Time: {{ booking.end_time|date:"F j, Y, g:i a" }}</p>
+                <p class="font-semibold text-dark-puce">Amount: KES {{ booking.amount }}</p>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div>
+                <h2 class="text-xl font-semibold mb-4 text-spanish-gray">Select Payment Method</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <label class="relative">
+                        <input type="radio" name="payment_method" value="mpesa" class="peer sr-only">
+                        <div class="border-2 border-spanish-gray/20 rounded-lg p-4 cursor-pointer peer-checked:border-sea peer-checked:bg-sea/10">
+                            <h3 class="font-semibold text-dark-puce">M-Pesa</h3>
+                            <p class="text-spanish-gray text-sm">Pay using M-Pesa mobile money</p>
+                        </div>
+                    </label>
+                    <label class="relative">
+                        <input type="radio" name="payment_method" value="card" class="peer sr-only">
+                        <div class="border-2 border-spanish-gray/20 rounded-lg p-4 cursor-pointer peer-checked:border-sea peer-checked:bg-sea/10">
+                            <h3 class="font-semibold text-dark-puce">Card</h3>
+                            <p class="text-spanish-gray text-sm">Pay with credit/debit card</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <a href="{% url 'dashboard' %}" class="text-spanish-gray hover:text-dark-puce transition duration-200">
+                    Cancel
+                </a>
+                <button type="submit" class="bg-dark-puce text-white px-6 py-2 rounded hover:bg-opacity-80 transition duration-200">
+                    Pay Now
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 
