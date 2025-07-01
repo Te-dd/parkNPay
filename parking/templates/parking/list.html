@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}List Your Own Space{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-8 mt-8">
+    <h2 class="text-2xl font-bold mb-6 text-center text-[var(--primary)]">Your Listed Parking Spaces</h2>
+    {% if user.is_authenticated %}
+        {% if my_locations %}
+            <ul class="divide-y divide-gray-200">
+                {% for location in my_locations %}
+                    <li class="py-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <div>
+                            <div class="text-lg font-semibold text-gray-800">{{ location.name }}</div>
+                            <div class="text-gray-500">{{ location.address }}</div>
+                            <div class="text-sm text-gray-400">
+                                {% if location.hourly_rate %}
+                                    Rate: <span class="font-medium text-[var(--primary)]">KES {{ location.hourly_rate }}</span> per hour
+                                {% elif location.daily_rate %}
+                                    Rate: <span class="font-medium text-[var(--primary)]">KES {{ location.daily_rate }}</span> per day
+                                {% elif location.monthly_rate %}
+                                    Rate: <span class="font-medium text-[var(--primary)]">KES {{ location.monthly_rate }}</span> per month
+                                {% else %}
+                                    <span class="text-red-500">No rate set</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-2 md:mt-0">
+                            <a href="{% url 'owner_dashboard' %}?location_id={{ location.id }}" class="inline-block px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--secondary)] transition">Manage</a>
+                            <a href="{% url 'location_earnings' location.id %}" class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">Earnings</a>
+                            <a href="{% url 'location_edit' location.id %}" class="inline-block px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">Edit</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-center text-gray-500 mb-6">You have not listed any parking spaces yet.</p>
+        {% endif %}
+        <div class="flex justify-center mt-8">
+            <a class="btn btn-primary px-6 py-3 bg-[var(--primary)] text-white rounded-lg shadow hover:bg-[var(--secondary)] transition text-lg font-semibold" href="{% url 'location_create' %}">List a New Parking Space</a>
+        </div>
+    {% else %}
+        <div class="text-center">
+            <p class="mb-4"> <a href="{% url 'login' %}?next={% url 'list' %}" class="text-[var(--primary)] underline">Log in</a> to list your own parking space.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

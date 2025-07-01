@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700"
+    />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkNPay</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        :root {
+            --primary: #2563eb;      /* Blue 600 */
+            --primary-dark: #1d4ed8; /* Blue 700 */
+            --secondary: #f0f9ff;    /* Blue 50 */
+            --accent: #0ea5e9;       /* Sky 500 */
+            --text-primary: #1e293b; /* Slate 800 */
+            --text-secondary: #475569; /* Slate 600 */
+            --success: #059669;      /* Emerald 600 */
+            --warning: #eab308;      /* Yellow 500 */
+            --error: #dc2626;        /* Red 600 */
+            --background: #ffffff;    /* White */
+        }
+        
+        /* Base styles */
+        body {
+            color: var(--text-primary);
+        }
+        
+        /* Card styles */
+        .card {
+            background-color: var(--secondary);
+            border: 1px solid var(--accent);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Form styles */
+        input, select, textarea {
+            background-color: var(--secondary) !important;
+            border-color: var(--accent) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 0 2px var(--accent) !important;
+        }
+        
+        /* Button styles */
+        .btn {
+            background-color: var(--accent);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        /* Table styles */
+        table {
+            background-color: var(--secondary);
+            color: var(--text-primary);
+        }
+        
+        th, td {
+            border-color: var(--accent) !important;
+        }
+        
+        /* Navigation styles */
+        .nav-item {
+            color: var(--text-primary);
+        }
+        
+        .nav-item:hover {
+            color: var(--accent);
+        }
+        
+        /* Hover effects */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Mobile menu animation */
+        .mobile-menu {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .mobile-menu.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="min-h-screen bg-white" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+    <!-- Navigation -->
+    <header class="bg-white border-b border-gray-100">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="relative py-4">
+                <div class="flex items-center justify-between">
+                    <a href="{% url 'home' %}" class="flex items-center gap-4 text-[var(--primary)] hover:opacity-80 transition-opacity">
+                        <div class="w-6 h-6">
+                            <svg viewBox="0 0 48 48" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_6_543)">
+                                    <path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285Z" fill="currentColor"></path>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_6_543"><rect width="48" height="48" fill="white"></rect></clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">ParkNPay</h2>
+                    </a>
+
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]">
+                        <svg class="w-6 h-6 text-[var(--text-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path class="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path class="close-icon hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Desktop menu -->
+                    <div class="hidden md:flex items-center gap-8">
+                        <div class="flex items-center gap-9">
+                            <a class="nav-link text-[var(--text-secondary)] text-sm font-medium leading-normal hover:text-[var(--primary)]" href="{% url 'home' %}">Home</a>
+                            {% if user.is_authenticated %}
+                                <a class="nav-link text-[var(--text-secondary)] text-sm font-medium leading-normal hover:text-[var(--primary)]" href="{% url 'dashboard' %}">Dashboard</a>
+                                <form method="post" action="{% url 'logout' %}" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="nav-link hover:text-[var(--accent)] transition-colors">
+                                        Logout
+                                    </button>
+                                </form>
+                            {% else %}
+                                <a class="nav-link text-[var(--text-secondary)] text-sm font-medium leading-normal hover:text-[var(--primary)]" href="{% url 'login' %}">Login</a>
+                                <a class="nav-link text-[var(--text-secondary)] text-sm font-medium leading-normal hover:text-[var(--primary)]" href="{% url 'signup' %}">Sign Up</a>
+                            {% endif %}
+                        </div>
+                        <div class="flex items-center gap-9">
+                            <a class="nav-link text-[var(--text-secondary)] text-sm font-medium leading-normal hover:text-[var(--primary)]" href="{% url 'list' %}">List Your Own Space</a>
+                        </div>
+                        {% if not user.is_authenticated %}
+                            <a href="{% url 'signup' %}" class="btn-primary rounded-lg px-6 py-2 text-sm font-semibold shadow-sm">
+                                Get Started
+                            </a>
+                        {% else %}
+                            <a href="{% url 'dashboard' %}" class="btn-primary rounded-lg px-6 py-2 text-sm font-semibold shadow-sm">
+                                Book Now
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Mobile menu -->
+                <div id="mobile-menu" class="mobile-menu absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg md:hidden">
+                    <div class="px-4 py-3 space-y-3">
+                        <a href="{% url 'home' %}" class="block text-[var(--text-secondary)] text-sm font-medium hover:text-[var(--primary)]">Home</a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'dashboard' %}" class="block text-[var(--text-secondary)] text-sm font-medium hover:text-[var(--primary)]">Dashboard</a>
+                            <form method="post" action="{% url 'logout' %}" class="block">
+                                {% csrf_token %}
+                                <button type="submit" class="w-full text-left text-[var(--text-secondary)] text-sm font-medium hover:text-[var(--primary)]">
+                                    Logout
+                                </button>
+                            </form>
+                            <a href="{% url 'dashboard' %}" class="block btn-primary text-center rounded-lg px-6 py-2 text-sm font-semibold shadow-sm">
+                                Book Now
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="block text-[var(--text-secondary)] text-sm font-medium hover:text-[var(--primary)]">Login</a>
+                            <a href="{% url 'signup' %}" class="block text-[var(--text-secondary)] text-sm font-medium hover:text-[var(--primary)]">Sign Up</a>
+                            <a href="{% url 'signup' %}" class="block btn-primary text-center rounded-lg px-6 py-2 text-sm font-semibold shadow-sm">
+                                Get Started
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'list' %}" class="block text-[var(--text-secondary)] text-sm font-medium hover:text-[var(--primary)]">List Your Own Space</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container mx-auto px-4 mt-4">
+            {% for message in messages %}
+                <div class="bg-[var(--secondary)] text-[var(--text-primary)] px-4 py-3 rounded-lg shadow-sm mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[var(--primary)] text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <h3 class="text-xl font-bold mb-2">ParkNPay</h3>
+                    <p class="text-[var(--secondary)]">Your trusted parking solution</p>
+                </div>
+                <div class="flex gap-8">
+                    <a href="#" class="text-[var(--secondary)] hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-[var(--secondary)] hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-white/10 text-center">
+                <p class="text-[var(--secondary)]">&copy; 2024 ParkNPay. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = mobileMenuButton.querySelector('.menu-icon');
+        const closeIcon = mobileMenuButton.querySelector('.close-icon');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('show');
+            menuIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (event) => {
+            if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                mobileMenu.classList.remove('show');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

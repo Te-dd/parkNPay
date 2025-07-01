@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-10 mt-10 mb-10 border border-gray-100">
+    <h2 class="text-3xl font-extrabold text-center text-[var(--primary)] mb-8">{{ title }}</h2>
+    <form method="post" enctype="multipart/form-data" id="locationForm" class="space-y-8">
+        {% csrf_token %}
+        <!-- Location Details -->
+        <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Basic Information</h3>
+            <div class="mb-4">
+                <label for="{{ form.name.id_for_label }}" class="block font-medium mb-1">Location Name</label>
+                {{ form.name }}
+            </div>
+            <div class="mb-4">
+                <label for="{{ form.description.id_for_label }}" class="block font-medium mb-1">Description</label>
+                {{ form.description }}
+            </div>
+        </div>
+        <!-- Address and Map -->
+        <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Location</h3>
+            <div class="mb-4">
+                <label for="{{ form.address.id_for_label }}" class="block font-medium mb-1">Address</label>
+                {{ form.address }}
+            </div>
+            <div id="map" class="rounded-lg border border-gray-200 mb-4" style="height: 300px;"></div>
+            {{ form.latitude }}
+            {{ form.longitude }}
+        </div>
+        <!-- Pricing -->
+        <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Pricing</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="{{ form.hourly_rate.id_for_label }}" class="block font-medium mb-1">Hourly Rate (KES)</label>
+                    {{ form.hourly_rate }}
+                </div>
+                <div>
+                    <label for="{{ form.daily_rate.id_for_label }}" class="block font-medium mb-1">Daily Rate (KES)</label>
+                    {{ form.daily_rate }}
+                </div>
+                <div>
+                    <label for="{{ form.monthly_rate.id_for_label }}" class="block font-medium mb-1">Monthly Rate (KES)</label>
+                    {{ form.monthly_rate }}
+                </div>
+            </div>
+        </div>
+        <!-- Availability -->
+        <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Availability</h3>
+            <div class="mb-4">
+                {{ form.availability_type }}
+            </div>
+            <div id="customHours" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="{{ form.opening_time.id_for_label }}" class="block font-medium mb-1">Opening Time</label>
+                        {{ form.opening_time }}
+                    </div>
+                    <div>
+                        <label for="{{ form.closing_time.id_for_label }}" class="block font-medium mb-1">Closing Time</label>
+                        {{ form.closing_time }}
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-medium mb-1">Available Days</label>
+                    {{ form.available_days }}
+                </div>
+            </div>
+        </div>
+        <!-- Features -->
+        <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Features & Rules</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex items-center gap-2">{{ form.has_security }}<label for="{{ form.has_security.id_for_label }}">Security</label></div>
+                <div class="flex items-center gap-2">{{ form.has_camera }}<label for="{{ form.has_camera.id_for_label }}">CCTV</label></div>
+                <div class="flex items-center gap-2">{{ form.has_lighting }}<label for="{{ form.has_lighting.id_for_label }}">Lighting</label></div>
+                <div class="flex items-center gap-2">{{ form.is_covered }}<label for="{{ form.is_covered.id_for_label }}">Covered</label></div>
+            </div>
+            <div class="mb-4">
+                <label for="{{ form.rules.id_for_label }}" class="block font-medium mb-1">Rules & Restrictions</label>
+                {{ form.rules }}
+            </div>
+        </div>
+        <!-- Images -->
+        <div>
+            <h3 class="text-xl font-semibold mb-4 text-gray-700">Photos</h3>
+            {{ image_form.as_p }}
+        </div>
+        <div class="flex flex-col md:flex-row gap-4 mt-8">
+            <button type="submit" class="btn btn-primary flex-1 py-3 text-lg font-semibold">Save Location</button>
+            <a href="{% url 'owner_dashboard' %}" class="btn btn-outline flex-1 py-3 text-lg font-semibold">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places"></script>
+<script>
+    // Initialize Google Maps
+    function initMap() {
+        const defaultLocation = { lat: -1.2921, lng: 36.8219 }; // Nairobi
+        const map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 13,
+            center: defaultLocation,
+        });
+
+        const marker = new google.maps.Marker({
+            map: map,
+            draggable: true,
+            position: defaultLocation,
+        });
+
+        // Initialize place autocomplete
+        const input = document.getElementById('id_address');
+        const autocomplete = new google.maps.places.Autocomplete(input);
+        
+        autocomplete.addListener('place_changed', function() {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) return;
+            
+            map.setCenter(place.geometry.location);
+            marker.setPosition(place.geometry.location);
+            
+            document.getElementById('id_latitude').value = place.geometry.location.lat();
+            document.getElementById('id_longitude').value = place.geometry.location.lng();
+        });
+
+        // Update coordinates when marker is dragged
+        marker.addListener('dragend', function() {
+            document.getElementById('id_latitude').value = marker.getPosition().lat();
+            document.getElementById('id_longitude').value = marker.getPosition().lng();
+        });
+    }
+
+    // Toggle custom hours fields based on availability type
+    document.getElementById('id_availability_type').addEventListener('change', function() {
+        const customHours = document.getElementById('customHours');
+        customHours.style.display = this.value === 'custom' ? 'block' : 'none';
+    });
+
+    // Initialize map when page loads
+    window.addEventListener('load', initMap);
+</script>
+{% endblock %}

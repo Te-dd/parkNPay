@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-[var(--primary)]">Booking History</h1>
+        <a href="{% url 'dashboard' %}" class="btn-primary px-6 py-2 rounded-lg shadow-sm">
+            View Active Bookings
+        </a>
+    </div>
+
+    {% if past_bookings %}
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {% for booking in past_bookings %}
+                <div class="bg-white rounded-lg shadow-md p-6 border border-gray-100">
+                    <div class="mb-4">
+                        <h3 class="font-semibold text-lg text-[var(--primary)]">{{ booking.parking_space.location.name }}</h3>
+                        <p class="text-[var(--text-secondary)]">Space: Side {{ booking.parking_space.side }} - {{ booking.parking_space.space_number }}</p>
+                    </div>
+                    <div class="space-y-2">
+                        <p class="text-[var(--text-secondary)]">Start: {{ booking.start_time|date:"F j, Y, g:i a" }}</p>
+                        <p class="text-[var(--text-secondary)]">End: {{ booking.end_time|date:"F j, Y, g:i a" }}</p>
+                        <p class="text-[var(--primary)] font-semibold">Amount: KES {{ booking.amount }}</p>
+                        <p class="text-[var(--text-secondary)]">Status: 
+                            <span class="payment-span px-2 py-1 rounded {% if booking.payment_status == 'paid' %}bg-green-100 text-green-800{% elif booking.payment_status == 'refunded' %}bg-yellow-100 text-yellow-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ booking.get_payment_status_display }}
+                            </span>
+                        </p>
+                        {% if booking.payment_method %}
+                            <p class="text-[var(--text-secondary)]">Paid via: {{ booking.get_payment_method_display }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <p class="text-[var(--text-secondary)] text-lg">You don't have any past bookings.</p>
+            <a href="{% url 'dashboard' %}" class="inline-block mt-4 text-[var(--primary)] hover:text-[var(--primary-dark)]">
+                Book a parking space
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

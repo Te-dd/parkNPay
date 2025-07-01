@@ -1,49 +1,49 @@
-{% extends 'parking/base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="container mx-auto px-4 sm:px-6">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-dark-puce mb-4 sm:mb-0">{{ location.name }}</h1>
-        <a href="{% url 'dashboard' %}" class="bg-spanish-gray text-white px-4 py-2 rounded hover:bg-opacity-80 transition duration-200 text-center sm:text-left">
+        <h1 class="text-2xl sm:text-3xl font-bold text-[var(--primary)] mb-4 sm:mb-0">{{ location.name }}</h1>
+        <a href="{% url 'dashboard' %}" class="btn-primary px-4 py-2 rounded shadow-sm text-center sm:text-left">
             Back to Dashboard
         </a>
     </div>
 
-    <!-- Selected Space Info - Moved to top level -->
-    <div id="selectedSpaceInfo" class="hidden mb-6 sm:mb-8 p-4 sm:p-6 bg-sea/10 rounded-lg shadow-md transform transition-all duration-300">
+    <!-- Selected Space Info -->
+    <div id="selectedSpaceInfo" class="hidden mb-6 sm:mb-8 p-4 sm:p-6 bg-[var(--secondary)] rounded-lg shadow-sm transform transition-all duration-300">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h3 class="text-xl sm:text-2xl font-semibold text-dark-puce mb-2">Selected Parking Space</h3>
-                <p class="text-spanish-gray text-base sm:text-lg" id="spaceDetails"></p>
+                <h3 class="text-xl sm:text-2xl font-semibold text-[var(--primary)] mb-2">Selected Parking Space</h3>
+                <p class="text-[var(--text-primary)] text-base sm:text-lg" id="spaceDetails"></p>
             </div>
             <div class="text-left sm:text-right">
-                <p class="text-spanish-gray text-sm mb-1">Status</p>
-                <span class="bg-sea text-dark-puce px-3 py-1 rounded-full text-sm font-medium">Available</span>
+                <p class="text-[var(--text-secondary)] text-sm mb-1">Status</p>
+                <span class="payment-span px-3 py-1 rounded-full text-sm font-medium">Available</span>
             </div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-8">
         <!-- Parking Space Grid -->
-        <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
-            <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-dark-puce">Available Spaces</h2>
+        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-100">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-[var(--primary)]">Available Spaces</h2>
             
             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 sm:gap-4">
                 {% for space in available_spaces %}
                     <div class="text-center">
                         {% if space.is_available %}
                             <button onclick="selectSpace('{{ space.id }}', '{{ space.space_number }}', '{{ space.side }}')" class="w-full group" data-space-id="{{ space.id }}">
-                                <div class="w-full aspect-square rounded-lg flex items-center justify-center mb-2 bg-sea text-dark-puce font-medium cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg group-hover:bg-sea/80 space-block text-sm sm:text-base">
+                                <div class="w-full aspect-square rounded-lg flex items-center justify-center mb-2 bg-[var(--secondary)] text-[var(--primary)] font-medium cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg group-hover:bg-[var(--primary)] group-hover:text-white space-block text-sm sm:text-base">
                                     {{ space.space_number }}
                                 </div>
-                                <p class="text-spanish-gray text-xs sm:text-sm group-hover:text-dark-puce transition-colors duration-300">Side {{ space.side }}</p>
+                                <p class="text-[var(--text-secondary)] text-xs sm:text-sm group-hover:text-[var(--primary)] transition-colors duration-300">Side {{ space.side }}</p>
                             </button>
                         {% else %}
                             <div class="w-full">
-                                <div class="w-full aspect-square rounded-lg flex items-center justify-center mb-2 bg-coral text-dark-puce font-medium cursor-not-allowed opacity-75 text-sm sm:text-base">
+                                <div class="w-full aspect-square rounded-lg flex items-center justify-center mb-2 bg-gray-100 text-gray-400 font-medium cursor-not-allowed opacity-75 text-sm sm:text-base">
                                     {{ space.space_number }}
                                 </div>
-                                <p class="text-spanish-gray text-xs sm:text-sm">Side {{ space.side }}</p>
+                                <p class="text-[var(--text-secondary)] text-xs sm:text-sm">Side {{ space.side }}</p>
                             </div>
                         {% endif %}
                     </div>
@@ -53,13 +53,13 @@
 
         <!-- Booking Form -->
         {% if form %}
-        <div class="bg-white rounded-lg shadow-lg p-4 sm:p-6">
-            <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-dark-puce">Book a Space</h2>
+        <div class="bg-white rounded-lg shadow-md p-4 sm:p-6 border border-gray-100">
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-[var(--primary)]">Book a Space</h2>
             
             <!-- Pricing Information -->
-            <div class="mb-6 p-4 bg-oatmeal rounded-lg">
-                <h3 class="font-semibold text-dark-puce mb-2">Pricing:</h3>
-                <ul class="text-spanish-gray space-y-1 text-sm sm:text-base">
+            <div class="mb-6 p-4 bg-[var(--secondary)] rounded-lg">
+                <h3 class="font-semibold text-[var(--primary)] mb-2">Pricing:</h3>
+                <ul class="text-[var(--text-secondary)] space-y-1 text-sm sm:text-base">
                     <li>• KES 30 per hour (for same-day bookings)</li>
                     <li>• KES 200 per day (for multi-day bookings)</li>
                     <li class="text-xs sm:text-sm mt-2">* Minimum booking duration: 1 hour</li>
@@ -70,12 +70,12 @@
                 {% csrf_token %}
                 {% for field in form %}
                     <div>
-                        <label class="block text-spanish-gray mb-2 text-sm sm:text-base">{{ field.label }}</label>
+                        <label class="block text-[var(--text-primary)] mb-2 text-sm sm:text-base">{{ field.label }}</label>
                         {{ field.errors }}
                         {{ field }}
                     </div>
                 {% endfor %}
-                <button type="submit" class="w-full bg-dark-puce text-white py-3 px-4 rounded hover:bg-opacity-80 transition duration-200 text-sm sm:text-base">
+                <button type="submit" class="w-full btn-primary py-3 px-4 rounded shadow-sm text-sm sm:text-base">
                     Book Now
                 </button>
             </form>
@@ -83,14 +83,21 @@
         {% endif %}
     </div>
 
-    <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 mb-8">
-        <div class="flex items-center">
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded bg-sea mr-2"></div>
-            <span class="text-spanish-gray text-sm sm:text-base">Available</span>
-        </div>
-        <div class="flex items-center">
-            <div class="w-5 h-5 sm:w-6 sm:h-6 rounded bg-coral mr-2"></div>
-            <span class="text-spanish-gray text-sm sm:text-base">Occupied</span>
+    <!-- Location Details -->
+    <div class="bg-white rounded-lg shadow-md p-6 border border-gray-100 mb-8">
+        <h2 class="text-xl font-semibold mb-4 text-[var(--primary)]">Location Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <h3 class="font-medium text-[var(--text-primary)]">Contact Information</h3>
+                <p class="text-[var(--text-secondary)]">{{ location.address }}</p>
+                <p class="text-[var(--text-secondary)]">Postal Code: {{ location.postal_code }}</p>
+                <p class="text-[var(--text-secondary)]">Contact: {{ location.contact_number }}</p>
+            </div>
+            <div>
+                <h3 class="font-medium text-[var(--text-primary)]">Location Coordinates</h3>
+                <p class="text-[var(--text-secondary)]">Latitude: {{ location.latitude }}</p>
+                <p class="text-[var(--text-secondary)]">Longitude: {{ location.longitude }}</p>
+            </div>
         </div>
     </div>
 </div>
@@ -99,13 +106,14 @@
 {% block extra_css %}
 <style>
     input, select {
-        @apply w-full border border-spanish-gray/20 rounded px-3 py-2 focus:outline-none focus:border-sea text-sm sm:text-base;
+        @apply w-full border border-gray-200 rounded px-3 py-2 focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] text-sm sm:text-base;
     }
     .errorlist {
-        @apply text-coral text-xs sm:text-sm mt-1;
+        @apply text-[var(--error)] text-xs sm:text-sm mt-1;
     }
     .space-block.selected {
-        @apply ring-4 ring-dark-puce scale-105 shadow-lg;
+        @apply ring-2 ring-[var(--primary)] scale-105 shadow-lg bg-[var(--primary)] !important;
+        color: white !important;
     }
     #selectedSpaceInfo.show {
         @apply scale-100 opacity-100;
@@ -138,43 +146,17 @@
             clickedSpace.classList.add('selected');
         }
 
-        // Update selected space info
-        const spaceDetails = document.getElementById('spaceDetails');
+        // Update the selected space info
         const spaceInfo = document.getElementById('selectedSpaceInfo');
-        
-        if (spaceDetails && spaceInfo) {
-            spaceDetails.textContent = `Space ${spaceNumber}, Side ${side} in ${document.querySelector('h1').textContent}`;
-            spaceInfo.classList.remove('hidden');
-            // Add show class after a brief delay to trigger animation
-            setTimeout(() => {
-                spaceInfo.classList.add('show');
-            }, 10);
-        }
+        const spaceDetails = document.getElementById('spaceDetails');
+        spaceDetails.textContent = `Space ${spaceNumber}, Side ${side}`;
+        spaceInfo.classList.remove('hidden');
+        spaceInfo.classList.add('show');
 
-        // Find the parking space select element
+        // Update the form's parking space field
         const spaceSelect = document.querySelector('select[name="parking_space"]');
         if (spaceSelect) {
-            // Set the selected value
             spaceSelect.value = spaceId;
-            
-            // Scroll to the booking form with offset for the fixed header (if any)
-            const bookingForm = document.getElementById('bookingForm');
-            if (bookingForm) {
-                const headerOffset = 80; // Adjust this value based on your header height
-                const elementPosition = bookingForm.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-                
-                // Focus on the start time input
-                const startTimeInput = document.querySelector('input[name="start_time"]');
-                if (startTimeInput) {
-                    startTimeInput.focus();
-                }
-            }
         }
     }
 
@@ -190,4 +172,4 @@
         }
     });
 </script>
-{% endblock %} 
+{% endblock %}

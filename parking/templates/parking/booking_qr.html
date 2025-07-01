@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Booking Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Parking Information</h4>
+                            <p><strong>Space Number:</strong> {{ booking.parking_space.space_number }}</p>
+                            <p><strong>Location:</strong> {{ booking.parking_space.location.name }}</p>
+                            <p><strong>Start Time:</strong> {{ booking.start_time }}</p>
+                            <p><strong>End Time:</strong> {{ booking.end_time }}</p>
+                            <p><strong>Amount:</strong> KES {{ booking.amount }}</p>
+                            <p><strong>Status:</strong> {{ booking.get_payment_status_display }}</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            {% if booking.qr_code %}
+                                <h4>Entry/Exit QR Code</h4>
+                                <img src="{{ booking.qr_code.url }}" alt="Booking QR Code" class="img-fluid">
+                                <p class="mt-2 text-muted">Show this QR code when entering or exiting the parking space</p>
+                                <a href="{{ booking.qr_code.url }}" download class="btn btn-primary">
+                                    Download QR Code
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

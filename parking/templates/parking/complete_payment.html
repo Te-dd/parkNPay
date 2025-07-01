@@ -1,52 +1,71 @@
-{% extends 'parking/base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto px-4">
-    <div class="bg-white rounded-lg shadow-lg p-8">
-        <h1 class="text-3xl font-bold mb-6 text-dark-puce">Complete Payment</h1>
-        
-        <div class="mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-spanish-gray">Booking Details</h2>
-            <div class="space-y-2">
-                <p class="text-spanish-gray">Location: {{ booking.parking_space.location.name }}</p>
-                <p class="text-spanish-gray">Space: Side {{ booking.parking_space.side }} - {{ booking.parking_space.space_number }}</p>
-                <p class="text-spanish-gray">Start Time: {{ booking.start_time|date:"F j, Y, g:i a" }}</p>
-                <p class="text-spanish-gray">End Time: {{ booking.end_time|date:"F j, Y, g:i a" }}</p>
-                <p class="font-semibold text-dark-puce">Amount: KES {{ booking.amount }}</p>
+    <div class="bg-[#FFFFFA] rounded-lg shadow-lg p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-4 text-[#00232A]">Complete Payment</h1>
+            <p class="text-[#00232A]">Review your booking details and complete the payment.</p>
+        </div>
+          <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-[#00232A]">Booking Details</h2>
+            <div class="space-y-2 text-[#00232A]">
+                <p>Location: {{ booking.parking_space.location.name }}</p>
+                <p>Space: Side {{ booking.parking_space.side }} - {{ booking.parking_space.space_number }}</p>
+                <p>Start Time: {{ booking.start_time|date:"F j, Y, g:i a" }}</p>
+                <p>End Time: {{ booking.end_time|date:"F j, Y, g:i a" }}</p>
+                <p class="font-semibold text-lg">Amount to Pay: KES {{ booking.amount }}</p>
             </div>
         </div>
 
         <form method="post" class="space-y-6">
             {% csrf_token %}
             <div>
-                <h2 class="text-xl font-semibold mb-4 text-spanish-gray">Select Payment Method</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <label class="relative">
-                        <input type="radio" name="payment_method" value="mpesa" class="peer sr-only">
-                        <div class="border-2 border-spanish-gray/20 rounded-lg p-4 cursor-pointer peer-checked:border-sea peer-checked:bg-sea/10">
-                            <h3 class="font-semibold text-dark-puce">M-Pesa</h3>
-                            <p class="text-spanish-gray text-sm">Pay using M-Pesa mobile money</p>
-                        </div>
-                    </label>
-                    <label class="relative">
-                        <input type="radio" name="payment_method" value="card" class="peer sr-only">
-                        <div class="border-2 border-spanish-gray/20 rounded-lg p-4 cursor-pointer peer-checked:border-sea peer-checked:bg-sea/10">
-                            <h3 class="font-semibold text-dark-puce">Card</h3>
-                            <p class="text-spanish-gray text-sm">Pay with credit/debit card</p>
-                        </div>
-                    </label>
+                <label for="phone_number" class="block text-sm font-medium text-[#00232A] mb-2">
+                    M-Pesa Phone Number
+                </label>
+                <div class="mt-1">
+                    <input type="tel" name="phone_number" id="phone_number" 
+                           placeholder="e.g., 0712345678"
+                           pattern="^(?:\+254|254|0)?[71]\d{8}$"
+                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[var(--primary)] focus:border-[var(--primary)]"
+                           required>
                 </div>
+                <p class="mt-2 text-sm text-[var(--text-secondary)]">Enter the M-Pesa number you want to use for payment</p>
             </div>
 
-            <div class="flex justify-between items-center">
-                <a href="{% url 'dashboard' %}" class="text-spanish-gray hover:text-dark-puce transition duration-200">
-                    Cancel
-                </a>
-                <button type="submit" class="bg-dark-puce text-white px-6 py-2 rounded hover:bg-opacity-80 transition duration-200">
-                    Pay Now
+            <div class="bg-[var(--secondary)] p-4 rounded-lg mb-6">
+                <h3 class="font-medium text-[#00232A] mb-2">Payment Instructions:</h3>
+                <ol class="list-decimal list-inside space-y-2 text-[var(--text-secondary)]">
+                    <li>Enter your M-Pesa phone number above</li>
+                    <li>Click "Pay with M-Pesa" button below</li>
+                    <li>Wait for the STK push prompt on your phone</li>
+                    <li>Enter your M-Pesa PIN to complete payment</li>
+                </ol>
+            </div>
+
+            <div class="flex items-center justify-end">
+                <button type="submit" class="bg-[var(--success)] text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition duration-200 flex items-center">
+                    <span>Pay with M-Pesa</span>
+                    <svg class="ml-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
                 </button>
             </div>
         </form>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <button type="submit" class="w-full bg-[#FF9B9B] text-[#00232A] py-3 px-4 rounded-lg hover:bg-opacity-80 transition duration-200">
+                Complete Payment
+            </button>
+        </form>
+
+        <div class="mt-4">
+            <a href="{% url 'dashboard' %}" class="block w-full text-center text-[#00232A] py-3 px-4 rounded-lg hover:underline">
+                Cancel and Return to Dashboard
+            </a>
+        </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

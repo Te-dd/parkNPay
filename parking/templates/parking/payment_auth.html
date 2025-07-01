@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h2 class="text-2xl font-bold mb-8 text-center">Complete Your Payment</h2>
+        
+        <!-- Tabs -->
+        <div class="mb-8">
+            <div class="flex border-b border-[var(--accent)]">
+                <button class="flex-1 py-2 px-4 text-center tab-button active" data-tab="login">
+                    Login
+                </button>
+                <button class="flex-1 py-2 px-4 text-center tab-button" data-tab="signup">
+                    Sign Up
+                </button>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login-form" class="tab-content active card p-6">
+            <h3 class="text-xl font-semibold mb-4">Login to Continue Payment</h3>
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                {{ login_form.as_p }}
+                <input type="hidden" name="login" value="true">
+                <button type="submit" class="btn w-full">Login & Continue to Payment</button>
+            </form>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signup-form" class="tab-content hidden card p-6">
+            <h3 class="text-xl font-semibold mb-4">Create Account to Continue Payment</h3>
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                {{ signup_form.as_p }}
+                <button type="submit" class="btn w-full">Sign Up & Continue to Payment</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.tab-button');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs and contents
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.add('hidden'));
+
+            // Add active class to clicked tab and show corresponding content
+            tab.classList.add('active');
+            const content = document.getElementById(`${tab.dataset.tab}-form`);
+            content.classList.remove('hidden');
+        });
+    });
+});
+</script>
+
+<style>
+.tab-button {
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.tab-button.active {
+    background-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.tab-button:hover {
+    background-color: var(--accent);
+    opacity: 0.9;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+form p {
+    margin-bottom: 1rem;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+form input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--accent);
+    border-radius: 0.375rem;
+    background-color: var(--secondary);
+    color: var(--text-primary);
+}
+
+form input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent);
+}
+</style>
+{% endblock %}

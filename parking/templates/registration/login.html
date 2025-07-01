@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-8">
+    <div class="bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-6 text-[#00232A]">Login</h2>
+        
+        {% if 'temporary_booking' in request.session %}
+        <div class="mb-4 p-4 bg-blue-100 text-blue-700 rounded">
+            Please log in to complete your parking booking
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+            
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                {{ form.username }}
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                {{ form.password }}
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Login as:</label>
+                {{ form.user_type }}
+            </div>
+
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+
+            <button type="submit" class="w-full bg-[#00232A] text-white py-2 px-4 rounded hover:bg-opacity-90 transition duration-200">
+                Login
+            </button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a href="{% url 'password_reset' %}" class="text-sm text-[#00232A] hover:underline">
+                Forgot Password?
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,158 @@
+/* Global Styles */
+:root {
+    --background-color: #FE0000;
+    --nav-color: #F0000;
+    --text-color: #002324;
+    --main-color: #F9B9B;
+    --normal-text: #FFFFA;
+    --button-color: #F9B9B;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: var(--nav-color);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 2rem;
+    transition: opacity 0.3s;
+}
+
+.nav-links a:hover {
+    opacity: 0.8;
+}
+
+/* Main Content */
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.main-content {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+h1 {
+    color: var(--text-color);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+}
+
+/* Location Selector */
+.location-selector {
+    margin-bottom: 3rem;
+}
+
+.location-dropdown {
+    width: 300px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 2px solid var(--main-color);
+    border-radius: 5px;
+    background-color: white;
+}
+
+/* Location Images */
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.location-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.location-card:hover {
+    transform: translateY(-5px);
+}
+
+.location-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.location-card h3 {
+    padding: 1rem;
+    margin: 0;
+    color: var(--text-color);
+}
+
+/* Contact Form */
+.contact-section {
+    background-color: white;
+    padding: 3rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #eee;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+.contact-btn {
+    background-color: var(--button-color);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.contact-btn:hover {
+    background-color: var(--main-color);
+} 

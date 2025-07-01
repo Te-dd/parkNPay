@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Location Dashboard - {{ location.name }}</h1>
+
+    <!-- Pricing Section -->
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-2 text-gray-700">Pricing</h2>
+        <ul class="list-disc pl-6 text-gray-700">
+            {% if location.hourly_rate %}
+                <li>Hourly Rate: <span class="font-semibold">KES {{ location.hourly_rate }}</span></li>
+            {% endif %}
+            {% if location.daily_rate %}
+                <li>Daily Rate: <span class="font-semibold">KES {{ location.daily_rate }}</span></li>
+            {% endif %}
+            {% if location.monthly_rate %}
+                <li>Monthly Rate: <span class="font-semibold">KES {{ location.monthly_rate }}</span></li>
+            {% endif %}
+            {% if not location.hourly_rate and not location.daily_rate and not location.monthly_rate %}
+                <li class="text-red-500">No rates set for this location.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Stats Cards -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-medium text-gray-900">Total Spaces</h3>
+            <p class="text-3xl font-bold">{{ total_spaces }}</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-medium text-gray-900">Available Spaces</h3>
+            <p class="text-3xl font-bold">{{ available_spaces }}</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-medium text-gray-900">Active Bookings</h3>
+            <p class="text-3xl font-bold">{{ active_bookings }}</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-medium text-gray-900">Today's Revenue</h3>
+            <p class="text-3xl font-bold">${{ today_revenue }}</p>
+        </div>
+    </div>
+
+    <!-- Current Bookings Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <h2 class="text-xl font-semibold p-6 bg-gray-50">Current Bookings</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left">Space</th>
+                        <th class="px-6 py-3 text-left">User</th>
+                        <th class="px-6 py-3 text-left">Start Time</th>
+                        <th class="px-6 py-3 text-left">End Time</th>
+                        <th class="px-6 py-3 text-left">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for booking in current_bookings %}
+                    <tr>
+                        <td class="px-6 py-4">{{ booking.parking_space.space_number }}</td>
+                        <td class="px-6 py-4">{{ booking.user.username }}</td>
+                        <td class="px-6 py-4">{{ booking.start_time|date:"M d, Y H:i" }}</td>
+                        <td class="px-6 py-4">{{ booking.end_time|date:"M d, Y H:i" }}</td>
+                        <td class="px-6 py-4">{{ booking.get_booking_status_display }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

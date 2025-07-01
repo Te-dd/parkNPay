@@ -1,71 +1,75 @@
-{% extends 'parking/base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8 text-dark-puce">Welcome to ParkNPay, {{ user.username }}!</h1>
+    <h1 class="text-3xl font-bold text-[#00232A] mb-8">Dashboard</h1>
 
     <!-- Your Bookings Section -->
     <div class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4 text-spanish-gray">Your Bookings</h2>
-        {% if bookings %}
-            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {% for booking in bookings %}
-                    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
-                        <div class="mb-4">
-                            <h3 class="font-semibold text-lg text-dark-puce">{{ booking.parking_space.location.name }}</h3>
-                            <p class="text-spanish-gray">Space: Side {{ booking.parking_space.side }} - {{ booking.parking_space.space_number }}</p>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <p class="text-spanish-gray">Start: {{ booking.start_time|date:"F j, Y, g:i a" }}</p>
-                            <p class="text-spanish-gray">End: {{ booking.end_time|date:"F j, Y, g:i a" }}</p>
-                            <p class="text-spanish-gray">Amount: KES {{ booking.amount }}</p>
-                            <p class="text-spanish-gray">Status: 
-                                <span class="{% if booking.payment_status == 'paid' %}text-sea{% elif booking.payment_status == 'pending' %}text-chartreuse{% else %}text-coral{% endif %} font-medium">
-                                    {{ booking.payment_status|title }}
-                                </span>
-                            </p>
-                            {% if booking.payment_method %}
-                                <p class="text-spanish-gray">Payment Method: {{ booking.payment_method|upper }}</p>
-                            {% endif %}
-                        </div>
-
-                        <div class="flex space-x-4">
-                            {% if booking.payment_status == 'pending' %}
-                                <a href="{% url 'complete_payment' booking.id %}" class="inline-block bg-sea text-dark-puce px-4 py-2 rounded hover:bg-opacity-80 transition duration-200">
-                                    Complete Payment
-                                </a>
-                                <a href="{% url 'cancel_booking' booking.id %}" class="inline-block bg-coral text-dark-puce px-4 py-2 rounded hover:bg-opacity-80 transition duration-200">
-                                    Cancel
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
+        <h2 class="text-2xl font-semibold text-[#00232A] mb-6">Your Bookings</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for booking in bookings %}
+            <div class="bg-[#FFFFFA] rounded-lg shadow p-6">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg text-[var(--primary)]">{{ booking.parking_space.location.name }}</h3>
+                    <p class="text-[var(--text-secondary)]">Space Number: {{ booking.parking_space.space_number }}</p>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-[var(--text-secondary)]">Start: {{ booking.start_time|date:"F j, Y, g:i a" }}</p>
+                    <p class="text-[var(--text-secondary)]">End: {{ booking.end_time|date:"F j, Y, g:i a" }}</p>
+                    <p class="font-semibold text-[var(--primary)]">Amount: KES {{ booking.amount }}</p>
+                    <p class="text-[var(--text-secondary)]">Status: 
+                        <span class="{% if booking.payment_status == 'paid' %}text-[var(--success)]{% else %}text-[var(--warning)]{% endif %}">
+                            {{ booking.get_payment_status_display }}
+                        </span>
+                    </p>
+                </div>
+                <div class="mt-4 flex gap-3">
+                    {% if booking.payment_status == 'pending' %}
+                    <a href="{% url 'complete_payment' booking.id %}" 
+                       class="flex-1 text-center bg-[var(--success)] text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200">
+                        Pay Now
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'cancel_booking' booking.id %}" 
+                       class="flex-1 text-center bg-[var(--error)] text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200">
+                        Cancel
+                    </a>
+                </div>
             </div>
-        {% else %}
-            <p class="text-spanish-gray">You have no bookings yet.</p>
-        {% endif %}
-    </div>
-
-    <!-- Available Locations Section -->
-    <div>
-        <h2 class="text-2xl font-semibold mb-4 text-spanish-gray">Available Locations</h2>
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {% for location in locations %}
-                <a href="{% url 'location_spaces' location.id %}" class="group block transform transition-all duration-300 hover:scale-105">
-                    <div class="bg-white rounded-lg shadow-md p-6 group-hover:shadow-xl group-hover:bg-sea/5 transition-all duration-300">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold text-lg text-dark-puce group-hover:text-sea transition-colors duration-300">{{ location.name }}</h3>
-                            <span class="text-spanish-gray text-sm bg-oatmeal px-3 py-1 rounded-full">
-                                Select
-                            </span>
-                        </div>
-                        <p class="text-spanish-gray group-hover:text-dark-puce transition-colors duration-300">{{ location.description }}</p>
-                    </div>
-                </a>
+            {% empty %}
+            <p class="text-[#00232A]">No active bookings.</p>
             {% endfor %}
         </div>
     </div>
+
+    <!-- Current Occupancy Section -->
+    <div class="mb-12">
+        <h2 class="text-2xl font-semibold text-[#00232A] mb-6">Available Parking Locations</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% for location in locations %}
+            <div class="bg-[#FFFFFA] rounded-lg shadow p-6">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-lg text-[var(--primary)]">{{ location.name }}</h3>
+                    <p class="text-[var(--text-secondary)]">{{ location.description }}</p>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-[var(--text-secondary)]">Available Spaces: {{ location.available_spaces }} / {{ location.total_spaces }}</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-[var(--primary)] h-2.5 rounded-full" style="width: {{ location.occupancy_rate }}%"></div>
+                    </div>
+                    <p class="text-[var(--text-secondary)] text-sm">Occupancy Rate: {{ location.occupancy_rate }}%</p>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'location_spaces' location.id %}" class="inline-block bg-[var(--primary)] text-white px-4 py-2 rounded hover:bg-opacity-90 transition duration-200">View Details</a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-[#00232A]">No parking locations available.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+
 </div>
-{% endblock %} 
+{% endblock %}

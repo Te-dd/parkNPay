@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Owner Dashboard</h5>
+                    <div class="list-group">
+                        <a href="{% url 'owner_dashboard' %}" class="list-group-item list-group-item-action active">
+                            Overview
+                        </a>
+                        <a href="{% url 'location_create' %}" class="list-group-item list-group-item-action">
+                            Add New Location
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Earnings Summary -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Earnings Overview</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="border rounded p-3 text-center">
+                                <h6>Total Earnings</h6>
+                                <h3>KES {{ total_earnings }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locations List -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Your Parking Locations</h5>
+                    {% if locations %}
+                    <div class="row">
+                        {% for location in locations %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                {% if location.images.exists %}
+                                <img src="{{ location.images.first.image.url }}" class="card-img-top" alt="{{ location.name }}">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ location.name }}</h5>
+                                    <p class="card-text">{{ location.description|truncatewords:30 }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">
+                                                Hourly Rate: KES {{ location.hourly_rate }}
+                                            </small>
+                                        </div>
+                                        <div class="btn-group">
+                                            <a href="{% url 'location_edit' location.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                            <a href="{% url 'location_earnings' location.id %}" class="btn btn-sm btn-outline-success">Earnings</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>You haven't added any parking locations yet. 
+                        <a href="{% url 'location_create' %}">Add your first location</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places"></script>
+<script>
+    // Initialize map for location selection
+    function initMap() {
+        // Map initialization code here
+    }
+</script>
+{% endblock %}

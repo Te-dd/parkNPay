@@ -1,32 +1,145 @@
-{% extends 'parking/base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-md mx-auto">
-    <h1 class="text-3xl font-bold mb-8 text-dark-puce text-center">Join ParkNPay</h1>
-    
-    <div class="bg-white rounded-lg shadow-lg p-8">
-        <h2 class="text-2xl font-semibold mb-6 text-dark-puce">Create Account</h2>
+<div class="min-h-[calc(100vh-180px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-[var(--secondary)]">
+    <div class="max-w-md w-full space-y-8 bg-white rounded-xl shadow-lg p-8">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-bold text-[var(--text-primary)]">
+                Create Your Account
+            </h2>
+            <p class="mt-2 text-center text-sm text-[var(--text-secondary)]">
+                Join ParkNPay to start booking parking spaces
+            </p>
+        </div>
         
-        <form method="post" class="space-y-4">
+        <form method="post" class="mt-8 space-y-6">
             {% csrf_token %}
-            {% for field in form %}
-                <div>
-                    <label class="block text-spanish-gray mb-2">{{ field.label }}</label>
-                    {{ field.errors }}
-                    {{ field }}
-                    {% if field.help_text %}
-                        <p class="text-spanish-gray text-sm mt-1">{{ field.help_text }}</p>
+            <div>
+                <label for="id_username" class="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                    Username
+                </label>
+                <div class="mt-1 relative">
+                    <input type="text" name="username" id="id_username" 
+                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+                           required>
+                    {% if form.username.errors %}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-[var(--error)]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
                     {% endif %}
                 </div>
-            {% endfor %}
-            <button type="submit" class="w-full bg-dark-puce text-white py-2 px-4 rounded hover:bg-opacity-80 transition duration-200">
-                Sign Up
-            </button>
+                {% if form.username.errors %}
+                    <p class="mt-2 text-sm text-[var(--error)]">{{ form.username.errors|join:", " }}</p>
+                {% endif %}
+                {% if form.username.help_text %}
+                    <p class="mt-2 text-sm text-[var(--text-secondary)]">{{ form.username.help_text }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="id_email" class="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                    Email
+                </label>
+                <div class="mt-1 relative">
+                    <input type="email" name="email" id="id_email" 
+                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+                           required>
+                    {% if form.email.errors %}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-[var(--error)]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if form.email.errors %}
+                    <p class="mt-2 text-sm text-[var(--error)]">{{ form.email.errors|join:", " }}</p>
+                {% endif %}
+                {% if form.email.help_text %}
+                    <p class="mt-2 text-sm text-[var(--text-secondary)]">{{ form.email.help_text }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="id_password1" class="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                    Password
+                </label>
+                <div class="mt-1 relative">
+                    <input type="password" name="password1" id="id_password1" 
+                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+                           required>
+                    {% if form.password1.errors %}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-[var(--error)]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if form.password1.errors %}
+                    <p class="mt-2 text-sm text-[var(--error)]">{{ form.password1.errors|join:", " }}</p>
+                {% endif %}
+                {% if form.password1.help_text %}
+                    <p class="mt-2 text-sm text-[var(--text-secondary)]">{{ form.password1.help_text }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label for="id_password2" class="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                    Confirm Password
+                </label>
+                <div class="mt-1 relative">
+                    <input type="password" name="password2" id="id_password2" 
+                           class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+                           required>
+                    {% if form.password2.errors %}
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-[var(--error)]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if form.password2.errors %}
+                    <p class="mt-2 text-sm text-[var(--error)]">{{ form.password2.errors|join:", " }}</p>
+                {% endif %}
+                {% if form.password2.help_text %}
+                    <p class="mt-2 text-sm text-[var(--text-secondary)]">{{ form.password2.help_text }}</p>
+                {% endif %}
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="rounded-md bg-[var(--error)]/10 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-[var(--error)]" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-[var(--error)]">
+                                {{ form.non_field_errors|join:", " }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div>
+                <button type="submit" class="btn-primary group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary)]">
+                    Create Account
+                </button>
+            </div>
         </form>
-        
-        <div class="mt-6 text-center">
-            <p class="text-spanish-gray">Already have an account? 
-                <a href="{% url 'login' %}" class="text-dark-puce hover:text-sea transition duration-200">Login</a>
+
+        <div class="text-center">
+            <p class="text-sm text-[var(--text-secondary)]">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="font-medium text-[var(--primary)] hover:text-[var(--primary-dark)] transition-colors">
+                    Sign in
+                </a>
             </p>
         </div>
     </div>
@@ -35,11 +148,19 @@
 
 {% block extra_css %}
 <style>
-    input {
-        @apply w-full border border-spanish-gray/20 rounded px-3 py-2 focus:outline-none focus:border-sea;
+    /* Add any custom styles for the signup page */
+    .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        transition: all 0.2s ease;
     }
-    .errorlist {
-        @apply text-coral text-sm mt-1;
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+    }
+    .btn-primary:active {
+        transform: translateY(0);
     }
 </style>
-{% endblock %} 
+{% endblock %}

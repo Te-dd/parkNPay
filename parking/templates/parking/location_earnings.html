@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl p-10 mt-10 mb-10 border border-gray-100">
+    <h2 class="text-2xl font-extrabold text-center text-[var(--primary)] mb-8">Earnings - {{ location.name }}</h2>
+    <!-- Date Range Filter -->
+    <form method="get" class="flex flex-col md:flex-row gap-4 mb-8 items-end justify-center">
+        <div>
+            <label for="start_date" class="block font-medium mb-1">From</label>
+            <input type="date" class="input input-bordered w-full" id="start_date" name="start_date" value="{{ start_date|date:'Y-m-d' }}">
+        </div>
+        <div>
+            <label for="end_date" class="block font-medium mb-1">To</label>
+            <input type="date" class="input input-bordered w-full" id="end_date" name="end_date" value="{{ end_date|date:'Y-m-d' }}">
+        </div>
+        <div class="pt-2 md:pt-0">
+            <button type="submit" class="btn btn-primary w-full">Filter</button>
+        </div>
+    </form>
+    <!-- Earnings Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-green-50 rounded-lg p-6 text-center shadow">
+            <div class="text-sm text-gray-500 mb-2">Total Earnings</div>
+            <div class="text-3xl font-bold text-green-700">KES {{ total }}</div>
+        </div>
+    </div>
+    <!-- Earnings Table -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Booking Reference</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Duration</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for earning in earnings %}
+                <tr>
+                    <td class="px-4 py-2">{{ earning.date }}</td>
+                    <td class="px-4 py-2">
+                        {% if earning.booking %}
+                            #{{ earning.booking.id }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">
+                        {% if earning.booking %}
+                            {{ earning.booking.start_time|timesince:earning.booking.end_time }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2 font-semibold">KES {{ earning.amount }}</td>
+                    <td class="px-4 py-2">
+                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold
+                            {% if earning.status == 'completed' %} bg-green-100 text-green-700
+                            {% elif earning.status == 'pending' %} bg-yellow-100 text-yellow-700
+                            {% else %} bg-red-100 text-red-700{% endif %}">
+                            {{ earning.status|capfirst }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center py-6 text-gray-400">No earnings found for this period</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Add charts/graphs here if needed
+</script>
+{% endblock %}
